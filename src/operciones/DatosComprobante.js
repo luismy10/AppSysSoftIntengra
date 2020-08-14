@@ -214,6 +214,7 @@ export default class DatosComprobante extends Component {
         );
     }
 }
+
 const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: 'white',
@@ -238,7 +239,6 @@ const styles = StyleSheet.create({
     modalBody: {
         //flex: 1,
         //flexDirection: 'column',
-        //justifyContent: 'space-between',
         //paddingTop: 15,
         justifyContent: 'space-between',
         paddingTop: 15,

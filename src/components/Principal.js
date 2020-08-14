@@ -6,6 +6,7 @@ import ListArticulo from './Articulo/ListArticulo';
 import AddArticulo from './Articulo/AddArticulo';
 import Venta from '../operciones/Venta';
 import CorteCaja from '../operciones/CorteCaja';
+import VentaConsulta from '../operciones/VentaConsulta';
 
 class HeaderNavigationBar extends React.Component {
     constructor(props) {
@@ -88,11 +89,12 @@ class Principal extends React.Component {
                     </View>
                     <View style={style.boxOptionfather}>
                         <TouchableOpacity style={style.boxOption} activeOpacity={.5} onPress={() =>
-                            this.props.navigation.navigate("CorteCaja") }>
+                            this.props.navigation.navigate("VentaConsulta") }>
                             <Image source={require('../img/consulta.png')} style={style.boxImg} resizeMode='contain' />
                             <Text style={style.boxText}>Consultas</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={style.boxOption} activeOpacity={.5} onPress={() => console.warn('hola 4')}>
+                        <TouchableOpacity style={style.boxOption} activeOpacity={.5} onPress={() => 
+                            this.props.navigation.navigate("CorteCaja") }>
                             <Image source={require('../img/reporte.png')} style={style.boxImg} resizeMode='contain' />
                             <Text style={style.boxText}>Reportes</Text>
                         </TouchableOpacity>
@@ -263,6 +265,9 @@ const apStack = createStackNavigator({
     },
     CorteCaja: {
         screen: CorteCaja
+    },
+    VentaConsulta: {
+        screen: VentaConsulta
     }
 });
 

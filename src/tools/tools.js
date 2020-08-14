@@ -77,3 +77,11 @@ export function getDomain(){
     let subruta = "http://192.168.1.40:8080/SysSoftIntegraBackEnd";
     return subruta;  
 }
+
+export function getFolderBackEnd(){
+    return '/SysSoftIntegraBackEnd'
+}
+
+export function getHttp(){
+    return  'http://'
+}

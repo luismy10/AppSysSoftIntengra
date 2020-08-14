@@ -3,8 +3,10 @@
 import React, { Component } from 'react';
 import { AsyncStorage, ScrollView, StyleSheet, Text, View, TextInput, Button, StatusBar, Image, Alert, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationActions } from 'react-navigation';
 import { getDomain } from '../tools/tools';
+import ConfigServer from './ConfigServer'
 
 export default class Login extends Component {
 
@@ -30,7 +32,9 @@ export default class Login extends Component {
             // user: '',
             // password: ''
             buttonText: 'Ingresar',
-            messageError: ''
+            messageError: '',
+
+            modalConfigServer :false
         }
     }
 
@@ -49,12 +53,12 @@ export default class Login extends Component {
                     throw "No se puedo completar la petición";
                 }
             }).then(result => {
-                
+
                 if (result.estado == 1) {
                     let empleado = result.empleado;
                     this.setState({
                         buttonText: 'Ingresar',
-                        messageError:'',
+                        messageError: '',
                         IdEmpleado: empleado.IdEmpleado,
                         TipoDocumento: empleado.TipoDocumento,
                         NumeroDocumento: empleado.NumeroDocumento,
@@ -72,22 +76,22 @@ export default class Login extends Component {
 
                     this.setState({
                         buttonText: 'Ingresar',
-                        messageError:result.message,
+                        messageError: result.message,
                         Usuario: '', Clave: ''
                     })
                     this.refs.txtUsuario.focus();
 
                 }
             }).catch(err => {
-              
-                this.setState({ buttonText: 'Ingresar',messageError:err })
+
+                this.setState({ buttonText: 'Ingresar', messageError: err })
             });
 
         });
 
     }
 
-    _loadAsync = async() => {
+    _loadAsync = async () => {
         await AsyncStorage.setItem('userToken', JSON.stringify({
             "IdEmpleado": this.state.IdEmpleado,
             "Apellidos": this.state.Apellidos,
@@ -133,7 +137,7 @@ export default class Login extends Component {
             this.refs.txtClave.focus();
         } else {
 
-            this.getUsuarioLogin(this.state.Usuario,this.state.Clave);
+            this.getUsuarioLogin(this.state.Usuario, this.state.Clave);
 
             // await AsyncStorage.setItem('userToken', 'abc');
             // const navigateAction = NavigationActions.navigate({
@@ -148,13 +152,40 @@ export default class Login extends Component {
 
     }
 
+    onCloseModalConfigServer = ()=>{
+        this.setState({
+            modalConfigServer: false
+        })
+    }
+
+    onOpenModalConfigServer = ()=>{
+        this.setState({
+            modalConfigServer: true
+        })
+    }
+
     render() {
         return (
             <ScrollView style={{ backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
                 <StatusBar backgroundColor='#1b3c4f' barStyle="light-content" />
                 <View style={styles.container}>
                     <View style={styles.containerForm}>
-
+                        <View style={{flexDirection:'row',justifyContent:'flex-end'}}>
+                            <TouchableOpacity 
+                                activeOpacity = {.5}
+                                onPress = { ()=>this.onOpenModalConfigServer() }
+                                style = {{alignItems: 'center', borderWidth: 1, borderColor: '#000', borderRadius: 5, padding: 5 }}
+                                >
+                                <MaterialCommunityIcons
+                                    name="server-network"
+                                    size={18}
+                                    color='#151a23'
+                                />
+                                <Text style={{ color: '#151a23', fontSize: 16, marginTop: 5 }}>
+                                    Configurar Dominio
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                         <View style={{ alignItems: 'center', marginVertical: 20 }}>
                             <Image source={require('../img/logo.png')} style={{ width: 83, height: 79 }} resizeMode='contain' />
                             <Text style={{ color: '#151a23', fontSize: 16, marginTop: 10 }}>
@@ -212,6 +243,7 @@ export default class Login extends Component {
                                 onChangeText={(text) => this.setState({ Clave: text })}
                                 value={this.state.Clave}
                                 ref='txtClave'
+                                secureTextEntry={true}
                             />
                         </View>
 
@@ -223,12 +255,21 @@ export default class Login extends Component {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={{ marginVertical: 20,flexDirection:'row',justifyContent:'center' }}>
+                        <View style={{ marginVertical: 20, flexDirection: 'row', justifyContent: 'center' }}>
                             <Text>{this.state.messageError}</Text>
                         </View>
 
                     </View>
                 </View>
+                {
+                    this.state.modalConfigServer?
+                        <ConfigServer
+                            visible={this.state.modalConfigServer}
+                            onCloseModalConfigServer={ ()=>this.onCloseModalConfigServer()}
+                        />
+                        : null
+                        
+                }
             </ScrollView >
         );
     }
@@ -243,7 +284,6 @@ const styles = StyleSheet.create({
     containerForm: {
         width: '90%',
         marginVertical: 20,
-        backgroundColor: 'white',
         padding: 10,
     },
     textInputStyle: {
